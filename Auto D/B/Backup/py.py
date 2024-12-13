@@ -45,10 +45,10 @@ def run():
         """
         * Objetivo dessa função:
             TODO Fazer atividade
-                TODO Armazenar conteúdo em um arquivo JSON já preparado                                                     ✔
-                TODO Escolher AI para responder (Sugestões: GPT-Neox ou GPT-J)                                              ✔ ✖
-                    ? Primeira IDEIA: GPT-J, por ser mais leve
-                TODO Escolher API para alimentar a AI (Sugestões: Google Custom Search API, Bing Search API ou SerpAPI)     ✔ ✖
+                TODO Armazenar conteúdo em um arquivo JSON já preparado                                                                 ✔
+                TODO Escolher AI para responder (Sugestões: GPT-Neox ou GPT-J | Versão mais leve: DistilBERT, T5 (versão small)         ✔ ✖
+                    ? Primeira IDEIA: GPT-J, por ser mais leve OU DistilBERT por ser bem mais leve e poder ser usado em uma máquina com 4GB sem GPU
+                TODO Escolher API para alimentar a AI (Sugestões: Google Custom Search API, Bing Search API ou SerpAPI)                 ✔ ✖
                     ? Primeira IDEIA: SerpAPI, por possui até 5000 buscas p/ mês e possibilidade de integração com outros motores de buscas
                 
                 ??? ========================================= ***** ========================================= ???
@@ -77,12 +77,12 @@ def run():
                 
                 # JSON
                 atividade = {
-                    contexto: ''''''
+                    contexto: '''PARAMETROS PARA A IA SEGUIR'''
                 }
                 respostas = {
-                    contexto: ''''''
+                    contexto: '''PARAMETROS PARA A IA SEGUIR'''
                     resposta = {
-                        resposta_GPT
+                        resposta_ia
                     }
                 }
 
