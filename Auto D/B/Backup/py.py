@@ -45,7 +45,11 @@ def run():
         """
         * Objetivo dessa função:
             TODO Fazer atividade
-                TODO Armazenar conteúdo em um arquivo JSON já preparado                                     ✔ ✖
+                TODO Armazenar conteúdo em um arquivo JSON já preparado                                                     ✔
+                TODO Escolher AI para responder (Sugestões: GPT-Neox ou GPT-J)                                              ✔ ✖
+                    ? Primeira IDEIA: GPT-J, por ser mais leve
+                TODO Escolher API para alimentar a AI (Sugestões: Google Custom Search API, Bing Search API ou SerpAPI)     ✔ ✖
+                    ? Primeira IDEIA: SerpAPI, por possui até 5000 buscas p/ mês e possibilidade de integração com outros motores de buscas
                 
                 ??? ========================================= ***** ========================================= ???
 
@@ -77,7 +81,9 @@ def run():
                 }
                 respostas = {
                     contexto: ''''''
-                    resposta: resposta_GPT
+                    resposta = {
+                        resposta_GPT
+                    }
                 }
 
                 funcao salvarJSON(tipo='', head_texto='', head_questao='', alternativas_quetao='', questao_atual='', texto_atual=''):
@@ -236,12 +242,6 @@ def run():
                         PEGA AS RESPOSTAS DESSE JSON E COLOUQE NA ALTERNATIVA CORRETA
                     }
                 } ENQUANTO (numero_de_card > card_verificado)
-                
-                funcao procurarRespostas():
-                    div._prosemirror-parent_15ceg_1
-                    button data-testid="send-button"
-
-                    button "Copiar código"
 
                 ? ====================================== Radio ====================================== ?
                 
