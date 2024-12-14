@@ -16,4 +16,5 @@
 | Ter horarios prédefinidos de fazer as atividades                                            |  ***  |  ***  |  ***  |  ***  |
 | Ter um sistema de Agenda com Atividades, Provas, Trabalhos, Faltas, etc.                    |  ***  |  ***  |  ***  |  ***  |
 | Tratamentos de erros                                                                        |  ***  |  ***  |  ***  |  ***  |
+| Treinar uma IA com dados do "Materias Digitais"                                             |  ***  |  ***  |  ***  |  ***  |
 
