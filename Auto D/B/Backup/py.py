@@ -73,17 +73,17 @@ def run():
                 numero_de_questao = número de div.css-nlzma4 # A div.css-nlzma4 são cada card de questões
                 
                 # JSON
-                atividade = {
+                *atividade = {
                     contexto: '''PARAMETROS PARA A IA SEGUIR'''
                 }
-                respostas = {
+                *respostas = {
                     contexto: '''PARAMETROS PARA A IA SEGUIR'''
                     resposta = {
                         resposta_ia
                     }
                 }
 
-                funcao salvarJSON(tipo='', head_texto='', head_questao='', alternativas_quetao='', questao_atual='', texto_atual=''):
+                *funcao salvarJSON(tipo='', head_texto='', head_questao='', alternativas_quetao='', questao_atual='', texto_atual=''):
                     se (tipo == 'Texto')
                         atividade = {
                             texto[f"texto_{texto_atual}"] = { # O $ é o valor da texto_atual
@@ -100,6 +100,87 @@ def run():
                             }
                         }
                     }
+                
+                *funcao extrair_texto_do_card(card_atual) {
+                    # Supondo que 'card_atual' é um elemento Playwright com a estrutura esperada
+                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
+                    retorne o conteúdo do texto
+                }
+
+                *funcao extrair_questao_radios(card_atual) {
+                    # Chama a função reutilizável para extrair o título
+                    head_questao = extrair_titulo_do_card(card_atual)
+
+                    # Procurando as alternativas (Radio Buttons)
+                    alternativas_quetao = []
+                    Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                        Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
+                        Salve no array e passe para próxima iteração
+
+                    retorne {
+                        "titulo": head_questao,
+                        "alternativas": alternativas_quetao
+                    }
+                }
+
+                *funcao extrair_questao_checkbox(card_atual) {
+                    # Chama a função reutilizável para extrair o título
+                    head_questao = extrair_titulo_do_card(card_atual)
+
+                    # Procurando as alternativas (Checkbox Buttons)
+                    alternativas_quetao = []
+                    Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                        Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
+                        Salve no array e passe para próxima iteração
+
+                    retorne {
+                        "titulo": head_questao,
+                        "alternativas": alternativas_quetao
+                    }
+                }
+
+                *funcao extrair_questao_dragable(card_atual) {
+                    # Chama a função reutilizável para extrair o título
+                    head_questao = extrair_titulo_do_card(card_atual)
+
+                    # Procurando as alternativas (Dragable Buttons)
+                    alternativas_quetao = []
+                    Itere sobre cada div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                        Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-16izr03 que está dentro da div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e também dentro de cada div.css-z0sbrd tem o data-content que dentro dele tem o "Index: número_do_index" pegue também o seu index # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual e o seu index que é a posição dela
+                        Salve no array e passe para próxima iteração
+
+                    retorne {
+                        "titulo": head_questao,
+                        "alternativas": alternativas_quetao
+                    }
+                }
+
+                *?funcao extrair_questao_order(card_atual) {
+                    # Chama a função reutilizável para extrair o título
+                    head_questao = extrair_titulo_do_card(card_atual)
+
+                    # Procurando as alternativas (Order Buttons)
+                    alternativas_quetao = []
+                    Itere sobre cada div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                        Pegue o todo e qualquer forma de Texto do span.MuiChip-label.css-9iedg7 que está dentro da div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
+                        Salve no array e passe para próxima iteração
+
+                    retorne {
+                        "titulo": head_questao,
+                        "alternativas": alternativas_quetao
+                    }
+                }
+
+                *funcao extrair_questao_textarea(card_atual) {
+                    # Chama a função reutilizável para extrair o título
+                    head_questao = extrair_titulo_do_card(card_atual)
+
+                    retorne {
+                        "titulo": head_questao,
+                    }
+                }
+
+                !funcao extrair_questao_select(card_atual) {}
                 
                 *FACA { # Vamos fazer tudo isso enquanto o número de numero_de_card for maior que o card_verificado ou seja ainda faltam cards para verificar
                     # Aqui vamos zerar as variaveis
@@ -133,7 +214,7 @@ def run():
                     *} SENÃO {
                         *SE (dentro da :nth-match('div.css-xz389d, card_atual') EXISTI h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j) {
                             # Se não tiver nenhum PDF, VÍDEO ou GIF vamos verificar se é um card só de texto
-                            head_texto = Todo o conteúdo do :nth-match('h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j, texto_atual') pegue todo e qualquer forma de Texto
+                            head_questao = extrair_texto_do_card(card_atual)
                             tipo = 'Texto'
 
                             # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
@@ -152,15 +233,12 @@ def run():
                                 *SE (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual') EXISTI span.MuiRadios-root.css-1sgsc5r) {
                                     # Se existir então é uma questão de tipo Radios
                                     card_verificado += 1
-                                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
-                                    tipo = 'Radios'
-                                    alternativas_quetao = []
-                                    Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
-                                        Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
-                                        Salve no array e passe para próxima iteração
+                                    
+                                    # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
+                                    questao_radios = extrair_questao_radios(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvarJSON(tipo, questao_atual, head_questao, alternativas_quetao)
+                                    salvar_json('Radios', questao_atual, questao_radio['titulo'], questao_radio['alternativas'])
 
                                     questoes_respondido += 1 # Vamos adicionar mais 1 ao número de questões respondidas
                                     questao_atual += 1
@@ -169,16 +247,13 @@ def run():
                                 *} SENÃO SE (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual') EXISTI span.MuiCheckbox-root.css-14bgux8) {
                                     # Se existir então é uma questão de tipo Checkbox
                                     card_verificado += 1
-                                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
-                                    tipo = 'Checkbox'
-                                    alternativas_quetao = []
-                                    Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
-                                        Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
-                                        Salve no array e passe para próxima iteração
+                                    
+                                    # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
+                                    questao_checkbox = extrair_questao_checkbox(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvarJSON(tipo, questao_atual, head_questao, alternativas_quetao)
-
+                                    salvar_json('Checkbox', questao_atual, questao_checkbox['titulo'], questao_checkbox['alternativas'])
+                                
                                     questoes_respondido += 1
                                     questao_atual += 1
                                     questao_checkbox += 1
@@ -186,16 +261,13 @@ def run():
                                 *} SENÃO SE (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual') EXISTI span.MuiCheckbox-root.css-14bgux8) {
                                     # Se existir então é uma questão de tipo Dragable
                                     card_verificado += 1
-                                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
-                                    tipo = 'Dragable'
-                                    alternativas_quetao = []
-                                    Itere sobre cada div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
-                                        Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-16izr03 que está dentro da div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e também dentro de cada div.css-z0sbrd tem o data-content que dentro dele tem o "Index: número_do_index" pegue também o seu index # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual e o seu index que é a posição dela
-                                        Salve no array e passe para próxima iteração
+                                    
+                                    # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
+                                    questao_dragable = extrair_questao_dragable(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvarJSON(tipo, questao_atual, head_questao, alternativas_quetao)
-
+                                    salvar_json('Dragable', questao_atual, questao_dragable['titulo'], questao_dragable['alternativas'])
+                                    
                                     questoes_respondido += 1
                                     questao_atual += 1
                                     questao_dragable += 1
@@ -203,15 +275,12 @@ def run():
                                 *} SENÃO SE (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual') EXISTI div.MuiChip-Default.css-16x8ql9) {
                                     # Se existir então é uma questão de tipo Order
                                     card_verificado += 1
-                                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
-                                    tipo = 'Order'
-                                    alternativas_quetao = []
-                                    Itere sobre cada div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
-                                        Pegue o todo e qualquer forma de Texto do span.MuiChip-label.css-9iedg7 que está dentro da div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
-                                        Salve no array e passe para próxima iteração
                                     
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvarJSON(tipo, questao_atual, head_questao, alternativas_quetao)
+                                    questao_order = extrair_questao_order(card_atual)
+
+                                    # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
+                                    salvar_json('Order', questao_atual, questao_order['titulo'], questao_order['alternativas'])
 
                                     questoes_respondido += 1
                                     questao_atual += 1
@@ -220,11 +289,13 @@ def run():
                                 *} SENÃO SE (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual') EXISTI div.MuiTextField-root.css-feqhe6) {
                                     # Se existir então é uma questão de tipo Textarea
                                     card_verificado += 1
-                                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
                                     
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvarJSON(tipo, questao_atual, head_questao)
-                                    
+                                    questao_textarea = extrair_questao_textarea(card_atual)
+
+                                    # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
+                                    salvar_json('Textarea', questao_atual, questao_textarea['titulo'])
+
                                     questoes_respondido += 1
                                     questao_atual += 1
                                     textarea += 1
