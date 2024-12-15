@@ -45,11 +45,8 @@ def run():
         """
         * Objetivo dessa função:
             TODO Fazer atividade
-                TODO Armazenar conteúdo em um arquivo JSON já preparado                                                                 ✔
-                TODO Escolher AI para responder (Sugestões: GPT-Neox ou GPT-J | Versão mais leve: DistilBERT, T5 (versão small)         ✔ ✖
-                    ? Primeira IDEIA: GPT-J, por ser mais leve OU DistilBERT por ser bem mais leve e poder ser usado em uma máquina com 4GB sem GPU
-                TODO Escolher API para alimentar a AI (Sugestões: Google Custom Search API, Bing Search API ou SerpAPI)                 ✔ ✖
-                    ? Primeira IDEIA: SerpAPI, por possui até 5000 buscas p/ mês e possibilidade de integração com outros motores de buscas
+                TODO Armazenar conteúdo em um arquivo JSON já preparado         ✔
+                
                 
                 ??? ========================================= ***** ========================================= ???
 
@@ -243,6 +240,9 @@ def run():
                     }
                 } ENQUANTO (numero_de_card > card_verificado)
 
+                para cada DIV_PERGUNTA:
+                    verificar TIPO e validar resposta responder
+                
                 ? ====================================== Radio ====================================== ?
                 
                     ?# Sistema/Função para procurar respostas
@@ -253,6 +253,7 @@ def run():
                     ?    respostas = { # Salvar no arquivo JSON para resposta
                     ?        resposta_GPT
                     ?    }
+
                     ?# Sistema/Função para responder respostas do tipo Radios
                     ?    Pegue a resposta do arquivo JSON
                     ?    Procure dentre as div.MuiRadiosGroup-root div.css-t1yck que estão dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') uma que o valor seja igual ao ARQUIVO JSON # Essa especificação 'div.MuiRadiosGroup-root div.css-t1yck' é o conjunto de alternativas. Aqui a ideia é procurar dentro do card atual no conjunto de alternativas a alternativa que tem o valor igual ao do arquivo JSON com a resposta do ChatGPT
@@ -264,6 +265,7 @@ def run():
                         ?    Vá para a página do ChatGPT (Abra uma nova guia, Entre em https://chatgpt.com/)
                         ?    Pega todo o conteúdo do JSON e coloca no ChatGPT
                         ?    Pega a resposta do ChatGPT que vai vim em formato JSON e armazene em outro arquivo JSON
+                        
                         ?# Sistema/Função para responder respostas do tipo Radios
                         ?    Pegue a resposta do arquivo JSON
                         ?    Crie um array com as alternativas corretas (Idependente se for apenas 1 ou mais) # Como é do tipo checkbox é possível ter mais de uma alternativa certa
@@ -273,7 +275,7 @@ def run():
 
                 ? ====================================== Dragable ====================================== ?
 
-                        ?# Sistema/Função para responder respostas do tipo Radios
+                        ?# Sistema/Função para responder respostas do tipo Dragable
                         ?    Pegue a resposta do arquivo JSON
                         ?    Crie um array para conter as alternativas na ordem correta
                         ?    Itere sobre os valores
@@ -294,7 +296,7 @@ def run():
                     
                 ? ====================================== Order ====================================== ?
 
-                        ?# Sistema/Função para responder respostas do tipo Radios
+                        ?# Sistema/Função para responder respostas do tipo Order
                         ?    Pegue a resposta do arquivo JSON
                         ?    Crie um array para armazenar os valores na ordem correta # Como é do tipo order (Ordenar) precisamos ter esse valores na ordem correta
                         ?    Itere sobre os valores e click na ordem correta
@@ -304,15 +306,19 @@ def run():
 
                 ? ====================================== Textarea ====================================== ?
                 
-                        ?# Sistema/Função para responder respostas do tipo Radios
+                        ?# Sistema/Função para responder respostas do tipo Textarea
                         ?    Pegue a resposta do arquivo JSON
                         ?    Click no textarea.MuiInputBase-inputMultiline.css-13pivat que está no div.MuiInput-root que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') e depois da um .fill() com o valor do JSON # Agora é apenas clicar no textarea e dar um fill (completar/encher) com a resposta do ChatGPT
+
+                * =========================================== ***** =========================================== *
 
                 * Adicionar forma de verificar se todas as questões foram selecionadas 
                 * Adicionar forma de clicar no botão enviar
                 * Adicionar forma de clicar no botão Salvar rascunho
-                * Adicionar forma de verificar quantas você acertou
-                * Adicionar forma de verificar quantas você errou
+                * Salvar as seguintes informações em um JSON
+                    * Total de atividades feitas
+                    * Adicionar forma de verificar quantas você acertou
+                    * Adicionar forma de verificar quantas você errou
                 
                 * =========================================== ***** =========================================== *
 
@@ -399,26 +405,6 @@ def run():
                                 if __name__ == "__main__":
                                     run()
 
-        '''
-            FACA {
-                SE (EXISTI a div.css-1iovhr3) { ## OU SEJA, significa que não há nada apenas um SVG para mostrar que não há nada
-                    Vá para expiradas (CLICK na div#language SELECIONE a li cujo data-value="expired:all") ## VÁ para próxima seção
-                } senão {
-                    SABER quantos button.css-k9aczr TEM e coloque na variavel Atividades ## SABER quantos button.css-k9aczr tem, ajuda nós a identificar quantas ATIVIDADES tem para fazer
-                    CLICK no PRIMEIRO button.css-k9aczr e BUSQUE por btn.css-1hmr1hq ## CLICAMOS para abrir a div e validar se dá ou não para realizar a atividade
-                    SE (
-                        dentro da div.css-nzomx6 no btn.css-1hmr1hq tiver span.css-1l6c7y9 ## Se há esse span NÃO DÁ PARA REALIZAR A ATIVIDADE
-                        OU
-                        O conteúdo do btn.css-1hmr1hq for ! de "Realizar") { # SE o TEXTO do botão for diferente então não dá para REALIZAR
-                    ) {
-                        CLICK no PRÓXIMO button.css-k9aczr e BUSQUE por btn.css-1hmr1hq  # Se tudo acima for verdade, vamos passar para o proximo botão e refazer os mesmos passos
-                    } SE NÃO { # Se as afirmações acima forem falso, então significa que é uma ATIVIDADE e dá para REALIZAR
-                        Subtraia -1 nas ativadades # Subtrair 1 das atividades para o programa saber quantas atividades ainda faltam
-                        Click no btn.css-1hmr1hq # Clicar no botão para realizar
-                    }
-                }
-            } ENQUANTO(Atividades > 0) # Faça tudo isso enquanto ainda tiver atividades
-        '''
         """
 
         """
