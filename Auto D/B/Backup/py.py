@@ -50,6 +50,13 @@ def run():
                 
                 ??? ========================================= ***** ========================================= ???
 
+                tipo_questao_1 = 'Radios'
+                tipo_questao_2 = 'Checkbox'
+                tipo_questao_3 = 'Dragable'
+                tipo_questao_4 = 'Order'
+                tipo_questao_5 = 'Textarea'
+                tipo_questao_6 = 'Select'
+                
                 card_atual = 1 # Identificar o card atual e facilitar a especificação dos elementos dentro dela
                 texto_atual = 1 # Identificar o texto atual e facilitar a especificação dos elementos dentro dela
                 questao_atual = 1 # Identificar a questão atual e facilitar a especificação dos elementos dentro dela
@@ -74,14 +81,110 @@ def run():
                 
                 # JSON
                 *atividade = {
-                    contexto: '''PARAMETROS PARA A IA SEGUIR'''
+                    contexto: 
+                    '''
+                        Contexto: Estou desenvolvendo um sistema de automação de processos que utiliza a IA do ChatGPT para responder perguntas. As perguntas estão em um arquivo JSON, com informações como número da pergunta, título da pergunta, tipo de pergunta, alternativas, entre outras. Enviarei esse arquivo JSON para a IA e ela deve retornar um outro arquivo JSON contendo apenas as respostas, com base nas regras que definirei a seguir.
+
+                        Objetivo: Enviar um arquivo JSON com as informações das perguntas, e a IA deve retornar um arquivo JSON com a seguinte estrutura:
+
+                        • Número da questão
+                        • Tipo da questão
+                        • Resposta da questão
+                        
+                        Regras para Respostas:
+                            1. Radios (Alternativa única):
+                                • Para questões do tipo "Radios", a IA deve retornar somente uma alternativa correta.
+                                • Exemplo:
+                                    atividade = {
+                                        "questao_1": {
+                                            "Tipo": "Radios",
+                                            "Header": "Título da questão",
+                                            "Alternativas": ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"]
+                                        }
+                                    }
+                                    resposta = {
+                                        "questao_1": {
+                                            "Tipo": "Radios",
+                                            "Resposta": ["Alternativa A"]
+                                        }
+                                    }
+
+                            2. Checkbox (Múltiplas alternativas):
+                                • Para questões do tipo "Checkbox", a IA deve retornar pelo menos uma alternativa correta, podendo ter mais de uma.
+                                • Exemplo:
+                                    atividade = {
+                                        "questao_2": {
+                                            "Tipo": "Checkbox",
+                                            "Header": "Título da questão",
+                                            "Alternativas": ["Alternativa A", "Alternativa B", "Alternativa C", "Alternativa D"]
+                                        }
+                                    }
+                                    resposta = {
+                                        "questao_2": {
+                                            "Tipo": "Checkbox",
+                                            "Resposta": ["Alternativa A", "Alternativa B", "Alternativa C"]
+                                        }
+                                    }
+
+                            3. Dragable (Ordem correta dos itens):
+                                • Para questões do tipo "Dragable", a IA deve retornar a ordem correta dos textos e seus respectivos índices.
+                                • Exemplo:
+                                    atividade = {
+                                        "questao_3": {
+                                            "Tipo": "Dragable",
+                                            "Header": "Título da questão",
+                                            "Alternativas": ["Texto_1", "Texto_2", "Texto_3", "Texto_4"]
+                                        }
+                                    }
+                                    resposta = {
+                                        "questao_3": {
+                                            "Tipo": "Dragable",
+                                            "Resposta": ["Texto_4", "Texto_2", "Texto_1", "Texto_3"]
+                                        }
+                                    }
+
+                            4. Order (Ordem correta dos itens):
+                                • Para questões do tipo "Order", a IA deve retornar a ordem correta dos textos.
+                                • Exemplo:
+                                    atividade = {
+                                        "questao_4": {
+                                            "Tipo": "Order",
+                                            "Header": "Título da questão",
+                                            "Alternativas": ["Palavra_1", "Palavra_2", "Palavra_3", "Palavra_4"]
+                                        }
+                                    }
+                                    resposta = {
+                                        "questao_4": {
+                                            "Tipo": "Order",
+                                            "Resposta": ["Palavra_2", "Palavra_1", "Palavra_3", "Palavra_4"]
+                                        }
+                                    }
+
+                            5. Textarea (Resposta objetiva):
+                                • Para questões do tipo "Textarea", a IA deve fornecer uma resposta breve, objetiva e de fácil compreensão, utilizando palavras com baixo grau de complexidade.
+                                • Exemplo:
+                                    atividade = {
+                                        "questao_5": {
+                                            "Tipo": "Textarea",
+                                            "Header": "Título da questão"
+                                        }
+                                    }
+                                        resposta = {
+                                        "questao_5": {
+                                            "Tipo": "Textarea",
+                                            "Resposta": "Resposta para a pergunta"
+                                        }
+                                    }
+
+                        Formato da Resposta: A resposta deve ser gerada no formato JSON, seguindo as regras definidas para cada tipo de questão.
+                    '''
                 }
+
                 *respostas = {
-                    contexto: '''PARAMETROS PARA A IA SEGUIR'''
-                    resposta = {
-                        resposta_ia
-                    }
+                    resposta = {}
                 }
+                
+                ? ### FUNÇÕES JSON ###
 
                 *funcao salvarJSON(tipo='', head_texto='', head_questao='', alternativas_quetao='', questao_atual='', texto_atual=''):
                     se (tipo == 'Texto')
@@ -91,7 +194,7 @@ def run():
                                 Texto: f'''head_texto''' # Troque ''' por aspas duplas
                             }
                         }
-                    senao se (tipo == 'Radios' ou tipo == 'Checkbox' ou tipo == 'Dragable' ou tipo == 'Order' ou tipo == 'Textarea') {
+                    senao se (tipo == tipo_questao_1 ou tipo == tipo_questao_2 ou tipo == tipo_questao_3 ou tipo == tipo_questao_4 ou tipo == tipo_questao_5) {
                         atividade = {
                             questoes[f"questao_{questao_atual}"] = { # O $ é o valor da questao_atual
                                 Tipo: tipo,
@@ -100,20 +203,78 @@ def run():
                             }
                         }
                     }
+
+                *funcao pegar_resposta_JSON() {
+                    Pegue a resposta do arquivo JSON
+                }
                 
-                *funcao extrair_texto_do_card(card_atual) {
-                    # Supondo que 'card_atual' é um elemento Playwright com a estrutura esperada
-                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
-                    retorne o conteúdo do texto
+                ? ### FUNÇÕES RESPONDER ###
+
+                *funcao responder_radios(indice_iteracao) {
+                    JSON = pegar_resposta_JSON()
+                    Procure dentre as div.MuiRadiosGroup-root div.css-t1yck que estão dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') uma que o valor seja igual ao ARQUIVO JSON # Essa especificação 'div.MuiRadiosGroup-root div.css-t1yck' é o conjunto de alternativas. Aqui a ideia é procurar dentro do card atual no conjunto de alternativas a alternativa que tem o valor igual ao do arquivo JSON com a resposta do ChatGPT
+                    Click no input.PrivateSwitchBase-input.css-1m9pwf3 que está na div.MuiRadiosGroup-root div.css-t1yck que esá dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') cujo valor seja igual ao ARQUIVO JSON # Agora é apenas clicar no Input da alternativa
                 }
 
-                *funcao validarQuestao () {
+                *funcao responder_checkbox(indice_iteracao) {
+                    JSON = pegar_resposta_JSON()
+                    Crie um array com as alternativas corretas (Idependente se for apenas 1 ou mais) # Como é do tipo checkbox é possível ter mais de uma alternativa certa
+                    Itere sobre os valores e click na ordem correta # Iteraremos nesse array para por as respostas corretas
+                        Procure dentre as div.MuiCheckbox-root div.css-t1yck que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') cujo valor seja igual ao ARQUIVO JSON
+                        Click no input.PrivateSwitchBase-input.css-1m9pwf3 que está na div.MuiCheckbox-root div.css-t1yck que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') cujo valor seja igual ao ARQUIVO JSON
+                }
+
+                *funcao responder_dragable(indice_iteracao) {
+                    JSON = pegar_resposta_JSON()
+                    Crie um array para conter as alternativas na ordem correta
+                    Itere sobre os valores
+                        Procure dentre as div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao valor do indice_array_atual
+                        diferenca = 0 # A diferença vai começar em 0 para cada iteração
+                        diferenca = indice_array - indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual # A diferença vai servir para saber quanto precisamos subir, descer ou ficar
+                        Se (indice_array > indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
+                            # Se for maior vamos descer ele
+                            Click no span.MuiButtonBase-root.css-2wyiu que está dentro da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual e também o svg.MuiSvgIcon-root.css-1in44b7 com o data-testid="ArrowCircleDownIcon" * diferenca # Aqui vamos fazer com que ele repita esse click a quantidade da diferença mutiplicando ele
+                            Passa para próxima iteração
+                        } Senão Se (indice_array < indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
+                            # Se for maior vamos subir ele
+                            Click no span.MuiButtonBase-root.css-2wyiu que está dentro da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual e também o svg.MuiSvgIcon-root.css-1in44b7 com o data-testid="ArrowCircleUpIcon" * diferenca
+                            Passa para próxima iteração
+                        } Senão Se (indice_array == indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
+                            Passa para próxima iteração # Se for igual apenas passe para a próxima iteração
+                        }
+                }
+
+                *funcao responder_order(indice_iteracao) {
+                    JSON = pegar_resposta_JSON()
+                    Crie um array para armazenar os valores na ordem correta # Como é do tipo order (Ordenar) precisamos ter esse valores na ordem correta
+                    Itere sobre os valores e click na ordem correta
+                        Procure dentre as div.MuiButtonBase-root.css-16x8ql9 span.MuiChip-label.css-9iedg7 que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') cujo valor seja igual ao ARQUIVO JSON
+                        Click no span.MuiChip-label.css-9iedg7 que está na div.MuiButtonBase-root.css-16x8ql9 que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') cujo valor seja igual ao ARQUIVO JSON
+                        # Faça isso para toda a ordem
+                }
+
+                *funcao responder_textarea(indice_iteracao) {
+                    JSON = pegar_resposta_JSON()
+                    Click no textarea.MuiInputBase-inputMultiline.css-13pivat que está no div.MuiInput-root que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, indice_iteracao') e depois da um .fill() com o valor do JSON # Agora é apenas clicar no textarea e dar um fill (completar/encher) com a resposta do ChatGPT
+                }
+
+                ? ### FUNÇÃO VERIFICAR IMAGEM NAS ALTERNATIVAS ###
+
+                *funcao verificar_imagens_nas_alterntativas () {
                     # Supondo que 'card_atual' é um elemento Playwright com a estrutura esperada
                     se (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual')
                     
                     div.MuiPaper-root.css-1db9nhj > img.MuiCardMedia-root.css-5rs0y1
                 }
 
+                ? ### FUNÇÕES EXTRAIR ###
+                    
+                *funcao extrair_texto_do_card(card_atual) {
+                    # Supondo que 'card_atual' é um elemento Playwright com a estrutura esperada
+                    head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
+                    retorne o conteúdo do texto
+                }
+                
                 *funcao extrair_questao_radios(card_atual) {
                     # Chama a função reutilizável para extrair o título
                     head_questao = extrair_titulo_do_card(card_atual)
@@ -122,7 +283,7 @@ def run():
                     alternativas_quetao = []
                     Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
                     SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
-                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                        Pause o programa e peça para que o usuário responda a pergunta atual e finalize a iteração aqui # Vamos finalizar a iteração para não ficar iterando em todas as outras alternativas, pois se tem 1 alternativa com uma imagem então é bom que o usuário responda pois a IA pode não conseguir responder
                     } Senão {
                         Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
                         Salve no array e passe para próxima iteração
@@ -142,7 +303,7 @@ def run():
                     alternativas_quetao = []
                     Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
                     SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
-                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                        Pause o programa e peça para que o usuário responda a pergunta atual e finalize a iteração aqui # Vamos finalizar a iteração para não ficar iterando em todas as outras alternativas, pois se tem 1 alternativa com uma imagem então é bom que o usuário responda pois a IA pode não conseguir responder
                     } SENAO {
                         Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
                         Salve no array e passe para próxima iteração
@@ -162,7 +323,7 @@ def run():
                     alternativas_quetao = []
                     Itere sobre cada div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
                     SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
-                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                        Pause o programa e peça para que o usuário responda a pergunta atual e finalize a iteração aqui # Vamos finalizar a iteração para não ficar iterando em todas as outras alternativas, pois se tem 1 alternativa com uma imagem então é bom que o usuário responda pois a IA pode não conseguir responder
                     } SENAO {
                         Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-16izr03 que está dentro da div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e também dentro de cada div.css-z0sbrd tem o data-content que dentro dele tem o "Index: número_do_index" pegue também o seu index # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual e o seu index que é a posição dela
                         Salve no array e passe para próxima iteração
@@ -174,7 +335,7 @@ def run():
                     }
                 }
 
-                *?funcao extrair_questao_order(card_atual) {
+                *funcao extrair_questao_order(card_atual) {
                     # Chama a função reutilizável para extrair o título
                     head_questao = extrair_titulo_do_card(card_atual)
 
@@ -182,7 +343,7 @@ def run():
                     alternativas_quetao = []
                     Itere sobre cada div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
                     SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
-                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                        Pause o programa e peça para que o usuário responda a pergunta atual e finalize a iteração aqui # Vamos finalizar a iteração para não ficar iterando em todas as outras alternativas, pois se tem 1 alternativa com uma imagem então é bom que o usuário responda pois a IA pode não conseguir responder
                     } SENAO {
                         Pegue o todo e qualquer forma de Texto do span.MuiChip-label.css-9iedg7 que está dentro da div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
                         Salve no array e passe para próxima iteração
@@ -204,7 +365,7 @@ def run():
                 }
 
                 !funcao extrair_questao_select(card_atual) {}
-                
+
                 *FACA { # Vamos fazer tudo isso enquanto o número de numero_de_card for maior que o card_verificado ou seja ainda faltam cards para verificar
                     # Aqui vamos zerar as variaveis
                     head_texto = ''
@@ -261,7 +422,7 @@ def run():
                                     questao_radios = extrair_questao_radios(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvar_json('Radios', questao_atual, questao_radio['titulo'], questao_radio['alternativas'])
+                                    salvar_json(tipo_questao_1, questao_atual, questao_radio['titulo'], questao_radio['alternativas'])
 
                                     questoes_respondido += 1 # Vamos adicionar mais 1 ao número de questões respondidas
                                     questao_atual += 1
@@ -275,7 +436,7 @@ def run():
                                     questao_checkbox = extrair_questao_checkbox(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvar_json('Checkbox', questao_atual, questao_checkbox['titulo'], questao_checkbox['alternativas'])
+                                    salvar_json(tipo_questao_2, questao_atual, questao_checkbox['titulo'], questao_checkbox['alternativas'])
                                 
                                     questoes_respondido += 1
                                     questao_atual += 1
@@ -289,7 +450,7 @@ def run():
                                     questao_dragable = extrair_questao_dragable(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvar_json('Dragable', questao_atual, questao_dragable['titulo'], questao_dragable['alternativas'])
+                                    salvar_json(tipo_questao_3, questao_atual, questao_dragable['titulo'], questao_dragable['alternativas'])
                                     
                                     questoes_respondido += 1
                                     questao_atual += 1
@@ -303,7 +464,7 @@ def run():
                                     questao_order = extrair_questao_order(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvar_json('Order', questao_atual, questao_order['titulo'], questao_order['alternativas'])
+                                    salvar_json(tipo_questao_4, questao_atual, questao_order['titulo'], questao_order['alternativas'])
 
                                     questoes_respondido += 1
                                     questao_atual += 1
@@ -317,7 +478,7 @@ def run():
                                     questao_textarea = extrair_questao_textarea(card_atual)
 
                                     # Armazene todo esse conteúdo no dicionário para depois passar para o JSON
-                                    salvar_json('Textarea', questao_atual, questao_textarea['titulo'])
+                                    salvar_json(tipo_questao_5, questao_atual, questao_textarea['titulo'])
 
                                     questoes_respondido += 1
                                     questao_atual += 1
@@ -332,21 +493,64 @@ def run():
                     }
                 } ENQUANTO (numero_de_card > card_verificado)
 
-                PARA cada div.css-1v3caum {
-                    verificar TIPO da questãoe validar resposta responder
-                }
-
-                Itere sobre cada div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
-                SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
-                    Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
-                } SENAO {
-                    Pegue o todo e qualquer forma de Texto do span.MuiChip-label.css-9iedg7 que está dentro da div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
-                    Salve no array e passe para próxima iteração
+                *Para cada div.MuiCard-root.css-xz389d div.css-1v3caum {
+                    *SE (tipo_da_questao_chatgpt == tipo_questao) {
+                        # Valida se o tipo da questão que o ChatGPT fez é o mesmo da original
+                        *SE (tipo_da_questao_chatgpt == tipo_questao_1) {
+                            # Valida o tipo da questão
+                            *SE (número_de_respostas == 1) {
+                                # Valida a resposta e responde
+                                responder_radios(indice_iteracao)
+                            } SENAO {
+                                Solicite ao usuário para que verifique a questão_NÚMERO_DA_QUESTÃO e espere até precione "Enter" na solicitação
+                                Passe para próxima div.css-1v3caum
+                            }
+                        *} SENAO SE (tipo_da_questao_chatgpt == tipo_questao_2) {
+                            # Valida o tipo da questão
+                            *SE (número_de_respostas >= 1) {
+                                # Valida a resposta e responde
+                                responder_checkbox(indice_iteracao)
+                            } SENAO {
+                                Solicite ao usuário para que verifique a questão_NÚMERO_DA_QUESTÃO e espere até precione "Enter" na solicitação
+                                Passe para próxima div.css-1v3caum
+                            }
+                        *} SENAO SE (tipo_da_questao_chatgpt == tipo_questao_3) {
+                            # Valida o tipo da questão
+                            *SE (número_de_respostas >= 1) {
+                                # Valida a resposta e responde
+                                responder_dragable(indice_iteracao)
+                            } SENAO {
+                                Solicite ao usuário para que verifique a questão_NÚMERO_DA_QUESTÃO e espere até precione "Enter" na solicitação
+                                Passe para próxima div.css-1v3caum
+                            }
+                        *} SENAO SE (tipo_da_questao_chatgpt == tipo_questao_4) {
+                            # Valida o tipo da questão
+                            *SE (número_de_respostas >= 1) {
+                                # Valida a resposta e responde
+                                responder_order(indice_iteracao)
+                            } SENAO {
+                                Solicite ao usuário para que verifique a questão_NÚMERO_DA_QUESTÃO e espere até precione "Enter" na solicitação
+                                Passe para próxima div.css-1v3caum
+                            }
+                        *} SENAO SE (tipo_da_questao_chatgpt == tipo_questao_5) {
+                            # Valida o tipo da questão
+                            SE (número_de_respostas >= 1) {
+                                # Valida a resposta e responde
+                                responder_textarea(indice_iteracao)
+                            } SENAO {
+                                Solicite ao usuário para que verifique a questão_NÚMERO_DA_QUESTÃO e espere até precione "Enter" na solicitação
+                                Passe para próxima div.css-1v3caum
+                            }
+                        }
+                    *} SENAO {
+                        Solicite ao usuário para que verifique a questão_NÚMERO_DA_QUESTÃO e espere até precione "Enter" na solicitação
+                        Passe para próxima div.css-1v3caum
+                    }
                 }
                 
                 ? ====================================== Radio ====================================== ?
                 
-                    ?# Sistema/Função para procurar respostas
+                    ? # Sistema/Função para procurar respostas
                     ?    Abra uma nova guia
                     ?    Entre em https://chatgpt.com/)
                     ?    Pega todo o conteúdo do JSON e coloca no ChatGPT
@@ -355,156 +559,73 @@ def run():
                     ?        resposta_GPT
                     ?    }
 
-                    ?# Sistema/Função para responder respostas do tipo Radios
-                    ?    Pegue a resposta do arquivo JSON
-                    ?    Procure dentre as div.MuiRadiosGroup-root div.css-t1yck que estão dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') uma que o valor seja igual ao ARQUIVO JSON # Essa especificação 'div.MuiRadiosGroup-root div.css-t1yck' é o conjunto de alternativas. Aqui a ideia é procurar dentro do card atual no conjunto de alternativas a alternativa que tem o valor igual ao do arquivo JSON com a resposta do ChatGPT
-                    ?    Click no input.PrivateSwitchBase-input.css-1m9pwf3 que está na div.MuiRadiosGroup-root div.css-t1yck que esá dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON # Agora é apenas clicar no Input da alternativa
+                    * # Sistema/Função para responder respostas do tipo Radios
+                    *    Pegue a resposta do arquivo JSON
+                    *    Procure dentre as div.MuiRadiosGroup-root div.css-t1yck que estão dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') uma que o valor seja igual ao ARQUIVO JSON # Essa especificação 'div.MuiRadiosGroup-root div.css-t1yck' é o conjunto de alternativas. Aqui a ideia é procurar dentro do card atual no conjunto de alternativas a alternativa que tem o valor igual ao do arquivo JSON com a resposta do ChatGPT
+                    *    Click no input.PrivateSwitchBase-input.css-1m9pwf3 que está na div.MuiRadiosGroup-root div.css-t1yck que esá dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON # Agora é apenas clicar no Input da alternativa
 
                 ? ====================================== Checkbox ====================================== ?
 
-                        ?# Sistema/Função para procurar respostas
-                        ?    Vá para a página do ChatGPT (Abra uma nova guia, Entre em https://chatgpt.com/)
-                        ?    Pega todo o conteúdo do JSON e coloca no ChatGPT
-                        ?    Pega a resposta do ChatGPT que vai vim em formato JSON e armazene em outro arquivo JSON
-                        
-                        ?# Sistema/Função para responder respostas do tipo Radios
-                        ?    Pegue a resposta do arquivo JSON
-                        ?    Crie um array com as alternativas corretas (Idependente se for apenas 1 ou mais) # Como é do tipo checkbox é possível ter mais de uma alternativa certa
-                        ?    Itere sobre os valores e click na ordem correta # Iteraremos nesse array para por as respostas corretas
-                        ?        Procure dentre as div.MuiCheckbox-root div.css-t1yck que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
-                        ?        Click no input.PrivateSwitchBase-input.css-1m9pwf3 que está na div.MuiCheckbox-root div.css-t1yck que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
+                    ? # Sistema/Função para procurar respostas
+                    ?    Vá para a página do ChatGPT (Abra uma nova guia, Entre em https://chatgpt.com/)
+                    ?    Pega todo o conteúdo do JSON e coloca no ChatGPT
+                    ?    Pega a resposta do ChatGPT que vai vim em formato JSON e armazene em outro arquivo JSON
+                    
+                    * # Sistema/Função para responder respostas do tipo Radios
+                    *    Pegue a resposta do arquivo JSON
+                    *    Crie um array com as alternativas corretas (Idependente se for apenas 1 ou mais) # Como é do tipo checkbox é possível ter mais de uma alternativa certa
+                    *    Itere sobre os valores e click na ordem correta # Iteraremos nesse array para por as respostas corretas
+                    *        Procure dentre as div.MuiCheckbox-root div.css-t1yck que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
+                    *        Click no input.PrivateSwitchBase-input.css-1m9pwf3 que está na div.MuiCheckbox-root div.css-t1yck que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
 
                 ? ====================================== Dragable ====================================== ?
 
-                        ?# Sistema/Função para responder respostas do tipo Dragable
-                        ?    Pegue a resposta do arquivo JSON
-                        ?    Crie um array para conter as alternativas na ordem correta
-                        ?    Itere sobre os valores
-                        ?        Procure dentre as div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao valor do indice_array_atual
-                        ?        diferenca = 0 # A diferença vai começar em 0 para cada iteração
-                        ?        diferenca = indice_array - indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual # A diferença vai servir para saber quanto precisamos subir, descer ou ficar
-                        ?        Se (indice_array > indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
-                        ?            # Se for maior vamos descer ele
-                        ?            Click no span.MuiButtonBase-root.css-2wyiu que está dentro da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual e também o svg.MuiSvgIcon-root.css-1in44b7 com o data-testid="ArrowCircleDownIcon" * diferenca # Aqui vamos fazer com que ele repita esse click a quantidade da diferença mutiplicando ele
-                        ?            Passa para próxima iteração
-                        ?        } Senão Se (indice_array < indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
-                        ?            # Se for maior vamos subir ele
-                        ?            Click no span.MuiButtonBase-root.css-2wyiu que está dentro da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual e também o svg.MuiSvgIcon-root.css-1in44b7 com o data-testid="ArrowCircleUpIcon" * diferenca
-                        ?            Passa para próxima iteração
-                        ?        } Senão Se (indice_array == indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
-                        ?            Passa para próxima iteração # Se for igual apenas passe para a próxima iteração
-                        ?        }
+                    * # Sistema/Função para responder respostas do tipo Dragable
+                    *    Pegue a resposta do arquivo JSON
+                    *    Crie um array para conter as alternativas na ordem correta
+                    *    Itere sobre os valores
+                    *        Procure dentre as div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao valor do indice_array_atual
+                    *        diferenca = 0 # A diferença vai começar em 0 para cada iteração
+                    *        diferenca = indice_array - indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual # A diferença vai servir para saber quanto precisamos subir, descer ou ficar
+                    *        Se (indice_array > indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
+                    *            # Se for maior vamos descer ele
+                    *            Click no span.MuiButtonBase-root.css-2wyiu que está dentro da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual e também o svg.MuiSvgIcon-root.css-1in44b7 com o data-testid="ArrowCircleDownIcon" * diferenca # Aqui vamos fazer com que ele repita esse click a quantidade da diferença mutiplicando ele
+                    *            Passa para próxima iteração
+                    *        } Senão Se (indice_array < indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
+                    *            # Se for maior vamos subir ele
+                    *            Click no span.MuiButtonBase-root.css-2wyiu que está dentro da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual e também o svg.MuiSvgIcon-root.css-1in44b7 com o data-testid="ArrowCircleUpIcon" * diferenca
+                    *            Passa para próxima iteração
+                    *        } Senão Se (indice_array == indice da div.css-z0sbrd que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') o qual tem o h6.MuiTypography-root.css-rckqyx cujo o valor seja igual ao indice_array_atual) {
+                    *            Passa para próxima iteração # Se for igual apenas passe para a próxima iteração
+                    *        }
                     
                 ? ====================================== Order ====================================== ?
 
-                        ?# Sistema/Função para responder respostas do tipo Order
-                        ?    Pegue a resposta do arquivo JSON
-                        ?    Crie um array para armazenar os valores na ordem correta # Como é do tipo order (Ordenar) precisamos ter esse valores na ordem correta
-                        ?    Itere sobre os valores e click na ordem correta
-                        ?        Procure dentre as div.MuiButtonBase-root.css-16x8ql9 span.MuiChip-label.css-9iedg7 que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
-                        ?        Click no span.MuiChip-label.css-9iedg7 que está na div.MuiButtonBase-root.css-16x8ql9 que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
-                        ?        # Faça isso para toda a ordem
+                    * # Sistema/Função para responder respostas do tipo Order
+                    *    Pegue a resposta do arquivo JSON
+                    *    Crie um array para armazenar os valores na ordem correta # Como é do tipo order (Ordenar) precisamos ter esse valores na ordem correta
+                    *    Itere sobre os valores e click na ordem correta
+                    *        Procure dentre as div.MuiButtonBase-root.css-16x8ql9 span.MuiChip-label.css-9iedg7 que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
+                    *        Click no span.MuiChip-label.css-9iedg7 que está na div.MuiButtonBase-root.css-16x8ql9 que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') cujo valor seja igual ao ARQUIVO JSON
+                    *        # Faça isso para toda a ordem
 
                 ? ====================================== Textarea ====================================== ?
                 
-                        ?# Sistema/Função para responder respostas do tipo Textarea
-                        ?    Pegue a resposta do arquivo JSON
-                        ?    Click no textarea.MuiInputBase-inputMultiline.css-13pivat que está no div.MuiInput-root que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') e depois da um .fill() com o valor do JSON # Agora é apenas clicar no textarea e dar um fill (completar/encher) com a resposta do ChatGPT
+                    * # Sistema/Função para responder respostas do tipo Textarea
+                    *    Pegue a resposta do arquivo JSON
+                    *    Click no textarea.MuiInputBase-inputMultiline.css-13pivat que está no div.MuiInput-root que está dentro do pai :nth-match('div.MuiCard-root.css-xz389d, card_atual') e depois da um .fill() com o valor do JSON # Agora é apenas clicar no textarea e dar um fill (completar/encher) com a resposta do ChatGPT
 
                 * =========================================== ***** =========================================== *
 
-                * Adicionar forma de verificar se todas as questões foram selecionadas 
-                * Adicionar forma de clicar no botão enviar
-                * Adicionar forma de clicar no botão Salvar rascunho
-                * Salvar as seguintes informações em um JSON
-                    * Total de atividades feitas
-                    * Adicionar forma de verificar quantas você acertou
-                    * Adicionar forma de verificar quantas você errou
+                ? Adicionar forma de verificar se todas as questões foram selecionadas 
+                ? Adicionar forma de clicar no botão enviar
+                ? Adicionar forma de clicar no botão Salvar rascunho
+                ? Salvar as seguintes informações em um JSON
+                    ? Total de atividades feitas
+                    ? Adicionar forma de verificar quantas você acertou
+                    ? Adicionar forma de verificar quantas você errou
                 
                 * =========================================== ***** =========================================== *
-
-                from playwright.sync_api import sync_playwright
-                import json
-
-                # Função para armazenar dados em um arquivo JSON
-                def armazenar_json(arquivo, dados):
-                    with open(arquivo, 'w') as f:
-                        json.dump(dados, f)
-
-                # Função para interagir com o site e resolver o formulário
-                def automatizar_formulario(page):
-                    questao_atual = 0
-                    texto_atual = 0
-                    card_verificado = 0
-                    questoes_respondido = 0
-
-                    # Descobrir quantos cards existem
-                    numero_de_card = len(page.query_selector_all("div.css-xz389d"))
-
-                    # Iniciar o loop para processar os cards
-                    while numero_de_card > card_verificado:
-                        card_atual = page.query_selector(f"div.css-xz389d:nth-of-type({card_verificado + 1})")
-
-                        if card_atual:
-                            # Verificar se o card contém vídeo, PDF ou GIF
-                            if card_atual.query_selector("div.css-1mi3tt8") or card_atual.query_selector("div.ytp-cued-thumbnail-overlay") or card_atual.query_selector(""):
-                                # Caso o card tenha conteúdo multimídia (PDF, Vídeo ou GIF)
-                                if card_atual.query_selector("h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j"):
-                                    # Se tiver texto explicativo
-                                    texto_atual += 1  # Incrementa apenas quando o texto for encontrado
-                                    card_verificado += 1  # Incrementa somente quando o card for processado completamente
-                                    # Extrair texto dos parágrafos e armazenar
-                                    textos = card_atual.query_selector_all("p")
-                                    conteudo_texto = [texto.inner_text() for texto in textos]
-                                    armazenar_json("textos.json", conteudo_texto)
-                                else:
-                                    card_verificado += 1  # Incrementa apenas quando o card multimídia for processado
-                            else:
-                                # Se o card não tem conteúdo multimídia, verificar se é um card de texto
-                                if card_atual.query_selector("h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j"):
-                                    texto_atual += 1  # Incrementa apenas quando o card contém texto
-                                    card_verificado += 1
-                                    # Extrair texto dos parágrafos e armazenar
-                                    textos = card_atual.query_selector_all("p")
-                                    conteudo_texto = [texto.inner_text() for texto in textos]
-                                    armazenar_json("textos.json", conteudo_texto)
-                                else:
-                                    # Caso o card seja uma questão (ex: múltipla escolha)
-                                    if card_atual.query_selector("div.css-nlzma4"):
-                                        questao_atual += 1  # Incrementa somente quando uma nova questão é encontrada
-                                        card_verificado += 1
-                                        alternativas = card_atual.query_selector_all("div.MuiBox-root.css-kmkory p")
-                                        alternativas_texto = [alt.inner_text() for alt in alternativas]
-                                        armazenar_json("alternativas.json", alternativas_texto)
-                                        
-                                        # Simulação de busca pela resposta no ChatGPT (substitua com uma chamada real)
-                                        resposta_chatgpt = {"resposta": "Alternativa A"}  # Exemplo de resposta, substitua conforme necessário
-                                        
-                                        # Selecionar a alternativa correta com base na resposta do ChatGPT
-                                        alternativa_correta = card_atual.query_selector(f"div.MuiRadiosGroup-root div.css-t1yck input[value='{resposta_chatgpt['resposta']}']")
-                                        if alternativa_correta:
-                                            alternativa_correta.click()
-                                            questoes_respondido += 1  # Incrementa quando uma questão é respondida
-                                        card_verificado += 1
-
-                                # Função principal que inicia a automação
-                                def run():
-                                    with sync_playwright() as p:
-                                        browser = p.chromium.launch(headless=False)  # Você pode mudar para headless=True se quiser rodar sem interface gráfica
-                                        page = browser.new_page()
-
-                                        # Acessar o site onde o formulário está localizado
-                                        page.goto("URL_DO_SEU_SITE")  # Substitua pelo URL do seu site com o formulário
-
-                                        # Chama a função que faz a automação do formulário
-                                        automatizar_formulario(page)
-
-                                        # Fechar o navegador após o processo
-                                        browser.close()
-
-                                # Chamar a função run() para iniciar a automação
-                                if __name__ == "__main__":
-                                    run()
 
         """
 
@@ -512,6 +633,7 @@ def run():
         
         Chat estou desenvolvendo uma automação usando Python e a Biblioteca Play Wright, toda a lógica já foi feita, agora estamos na parte final do código, estamos desenvolvendo uma função para identificar e responder os cards
         Chat estou desenvolvendo uma automação usando Python e a Biblioteca Play Wright a ideia é que ela responde formuláiros de uma página, o site em si é dinamico sendo gerenciado totalmente pelo JS, porém a parte do formulário não é gerenciada diretamente pelo JS. Gostaria que você explicase essa lógica para navgegar no formulário, identificar os cards e responder o mesmo.
+        Chat estou desenvolvendo uma automação usando Python e a Biblioteca Play Wright a ideia é que ela responde formuláiros de uma página, o site em si é dinamico sendo gerenciado totalmente pelo JS, porém a parte do formulário não é gerenciada diretamente pelo JS. Gostaria que as linhas de códigos que eu mandar você possa converter em código Python
 
         """
 
