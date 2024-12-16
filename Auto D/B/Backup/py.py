@@ -107,6 +107,13 @@ def run():
                     retorne o conteúdo do texto
                 }
 
+                *funcao validarQuestao () {
+                    # Supondo que 'card_atual' é um elemento Playwright com a estrutura esperada
+                    se (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual')
+                    
+                    div.MuiPaper-root.css-1db9nhj > img.MuiCardMedia-root.css-5rs0y1
+                }
+
                 *funcao extrair_questao_radios(card_atual) {
                     # Chama a função reutilizável para extrair o título
                     head_questao = extrair_titulo_do_card(card_atual)
@@ -114,8 +121,12 @@ def run():
                     # Procurando as alternativas (Radio Buttons)
                     alternativas_quetao = []
                     Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                    SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
+                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                    } Senão {
                         Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
                         Salve no array e passe para próxima iteração
+                    }
 
                     retorne {
                         "titulo": head_questao,
@@ -130,8 +141,12 @@ def run():
                     # Procurando as alternativas (Checkbox Buttons)
                     alternativas_quetao = []
                     Itere sobre cada div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                    SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
+                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                    } SENAO {
                         Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-kmkory que está dentro da div.css-t1yck que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
                         Salve no array e passe para próxima iteração
+                    }
 
                     retorne {
                         "titulo": head_questao,
@@ -146,8 +161,12 @@ def run():
                     # Procurando as alternativas (Dragable Buttons)
                     alternativas_quetao = []
                     Itere sobre cada div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                    SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
+                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                    } SENAO {
                         Pegue o todo e qualquer forma de Texto da div.MuiBox-root.css-16izr03 que está dentro da div.css-z0sbrd que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e também dentro de cada div.css-z0sbrd tem o data-content que dentro dele tem o "Index: número_do_index" pegue também o seu index # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual e o seu index que é a posição dela
                         Salve no array e passe para próxima iteração
+                    }
 
                     retorne {
                         "titulo": head_questao,
@@ -162,8 +181,12 @@ def run():
                     # Procurando as alternativas (Order Buttons)
                     alternativas_quetao = []
                     Itere sobre cada div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                    SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
+                        Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                    } SENAO {
                         Pegue o todo e qualquer forma de Texto do span.MuiChip-label.css-9iedg7 que está dentro da div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
                         Salve no array e passe para próxima iteração
+                    }
 
                     retorne {
                         "titulo": head_questao,
@@ -303,16 +326,23 @@ def run():
                                 !} SENÃO SE (dentro da :nth-match('div.MuiCard-root.css-xz389d, card_atual') EXISTI span.MuiRadios-root.css-1sgsc5r) {                                }
                             }
                         }
-                        VERIFICAR LIÇÃO SE AS ALTERNATIVAS FOR APENAS IMAGENS
                             PEDIR AO USUÁRIO PARA QUERESOLVA ESSA QUESTÃO E DIGA SE JÁ RESPONDEU PARA PASSAR PARA PRÓXIMA
-                        PEGA O TÍTULO DA QUESTÃO E AS ALTERNATIVAS DEPOIS ARMARZENA-LÁS NO JSON
                         PEGA O JSON COM A PERGUNTA E AS ALTERNATIVAS DA questao_atual E PASSE PARA ChatGPT PARA QUE RESOLVA E RETORNE A RESPOSTA(s)
                         PEGA AS RESPOSTAS DESSE JSON E COLOUQE NA ALTERNATIVA CORRETA
                     }
                 } ENQUANTO (numero_de_card > card_verificado)
 
-                para cada DIV_PERGUNTA:
-                    verificar TIPO e validar resposta responder
+                PARA cada div.css-1v3caum {
+                    verificar TIPO da questãoe validar resposta responder
+                }
+
+                Itere sobre cada div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') e guarde no array alternativas_quetao
+                SE na :nth-match(div.css-t1yck, indice_da_iteracao) EXISTI img.MuiCardMedia-root.css-5rs0y1 que está dentro da div.MuiPaper-root.css-1db9nhj {
+                    Pause o programa e peça para que o usuário responda a pergunta atual e acabe a iteração
+                } SENAO {
+                    Pegue o todo e qualquer forma de Texto do span.MuiChip-label.css-9iedg7 que está dentro da div.MuiChip-root.css-16x8ql9 que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') # Isso é para garantir que vamos pegar todo o conteúdo da alternativa atual
+                    Salve no array e passe para próxima iteração
+                }
                 
                 ? ====================================== Radio ====================================== ?
                 
