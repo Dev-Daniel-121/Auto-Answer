@@ -105,12 +105,13 @@ def fazer_atividade(page, seletor_botao_realizar):
     """Fazer Atividade"""
     page.locator(seletor_botao_realizar).click()
     
-    tipo_questao_1 = 'Radios'
-    tipo_questao_2 = 'Checkbox'
-    tipo_questao_3 = 'Dragable'
-    tipo_questao_4 = 'Order'
-    tipo_questao_5 = 'Textarea'
-    tipo_questao_6 = 'Select'
+    tipo_questao_1 = 'Texto'
+    tipo_questao_2 = 'Radios'
+    tipo_questao_3 = 'Checkbox'
+    tipo_questao_4 = 'Dragable'
+    tipo_questao_5 = 'Order'
+    tipo_questao_6 = 'Textarea'
+    #! tipo_questao_7 = 'Select'
 
     card_verificado = 0
     questoes_respondido = 0
@@ -132,7 +133,7 @@ def fazer_atividade(page, seletor_botao_realizar):
             head_texto = ''
             head_questao = ''
             tipo_questao = ''
-            alternativas_quetao = []
+            #! alternativas_quetao = []
             card_selector = f":nth-match(div.MuiCard-root.css-xz389d, {card_atual})"
 
             # Verifica se o card tem PDF, Vídeo ou GIF
@@ -143,8 +144,8 @@ def fazer_atividade(page, seletor_botao_realizar):
                 if page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").count() > 0:
                     # Tem texto explicativo sobre o assunto
                     head_texto = page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").text_content().strip()
-                    tipo_questao = 'Texto'
-                    salvar_json(tipo_questao, texto_atual, head_texto)
+                    tipo_questao = tipo_questao_1
+                    salvarJSON(tipo_questao, texto_atual, head_texto)
                     questao_texto_img_gif_video += 1
                     texto_atual += 1
                 else:
@@ -160,8 +161,8 @@ def fazer_atividade(page, seletor_botao_realizar):
             if page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").count() > 0:
                 # Questão de texto
                 head_questao = page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").text_content().strip()
-                tipo_questao = 'Texto'
-                salvar_json(tipo_questao, texto_atual, head_questao)
+                tipo_questao = tipo_questao_1
+                salvarJSON(tipo_questao, texto_atual, head_questao)
                 questao_texto += 1
                 texto_atual += 1
                 card_atual += 1
@@ -174,8 +175,10 @@ def fazer_atividade(page, seletor_botao_realizar):
                 if page.locator(f"{card_selector} span.MuiRadios-root.css-1sgsc5r").count() > 0:
                     # Questão tipo Radio
                     questao_radios += 1
-                    questao_radios_data = extrair_questao_radios(page, card_atual)
-                    salvar_json('Radios', questao_atual, questao_radios_data['titulo'], questao_radios_data['alternativas'])
+                    questao_radios_data = extrair_questao_radios(page, card_selector)
+
+                    salvarJSON(tipo_questao_2, questao_atual, questao_radios_data['titulo'], questao_radios_data['alternativas'])
+
                     questoes_respondido += 1
                     questao_atual += 1
                     card_atual += 1
@@ -185,8 +188,10 @@ def fazer_atividade(page, seletor_botao_realizar):
                 elif page.locator(f"{card_selector} span.MuiCheckbox-root.css-14bgux8").count() > 0:
                     # Questão tipo Checkbox
                     questao_checkbox += 1
-                    questao_checkbox_data = extrair_questao_checkbox(page, card_atual)
-                    salvar_json('Checkbox', questao_atual, questao_checkbox_data['titulo'], questao_checkbox_data['alternativas'])
+                    questao_checkbox_data = extrair_questao_checkbox(page, card_selector)
+
+                    salvarJSON(tipo_questao_3, questao_atual, questao_checkbox_data['titulo'], questao_checkbox_data['alternativas'])
+
                     questoes_respondido += 1
                     questao_atual += 1
                     card_atual += 1
@@ -196,8 +201,10 @@ def fazer_atividade(page, seletor_botao_realizar):
                 elif page.locator(f"{card_selector} div.css-z0sbrd").count() > 0:
                     # Questão tipo Dragable
                     questao_dragable += 1
-                    questao_dragable_data = extrair_questao_dragable(page, card_atual)
-                    salvar_json('Dragable', questao_atual, questao_dragable_data['titulo'], questao_dragable_data['alternativas'])
+                    questao_dragable_data = extrair_questao_dragable(page, card_selector)
+
+                    salvarJSON(tipo_questao_4, questao_atual, questao_dragable_data['titulo'], questao_dragable_data['alternativas'])
+
                     questoes_respondido += 1
                     questao_atual += 1
                     card_atual += 1
@@ -207,8 +214,10 @@ def fazer_atividade(page, seletor_botao_realizar):
                 elif page.locator(f"{card_selector} div.MuiChip-root.css-16x8ql9").count() > 0:
                     # Questão tipo Order
                     questao_order += 1
-                    questao_order_data = extrair_questao_order(page, card_atual)
-                    salvar_json('Order', questao_atual, questao_order_data['titulo'], questao_order_data['alternativas'])
+                    questao_order_data = extrair_questao_order(page, card_selector)
+
+                    salvarJSON(tipo_questao_5, questao_atual, questao_order_data['titulo'], questao_order_data['alternativas'])
+
                     questoes_respondido += 1
                     questao_atual += 1
                     card_atual += 1
@@ -218,8 +227,10 @@ def fazer_atividade(page, seletor_botao_realizar):
                 elif page.locator(f"{card_selector} div.MuiTextField-root.css-feqhe6").count() > 0:
                     # Questão tipo Textarea
                     questao_textarea += 1
-                    questao_textarea_data = extrair_questao_textarea(page, card_atual)
-                    salvar_json('Textarea', questao_atual, questao_textarea_data['titulo'])
+                    questao_textarea_data = extrair_questao_textarea(page, card_selector)
+
+                    salvarJSON(tipo_questao_6, questao_atual, questao_textarea_data['titulo'])
+
                     questoes_respondido += 1
                     questao_atual += 1
                     card_atual += 1
@@ -232,7 +243,6 @@ def fazer_atividade(page, seletor_botao_realizar):
             card_verificado += 1
 
     print("Atividade realizada!")
-
 
 ### ? FUNÇÕES JSON ? ###
 
@@ -598,21 +608,21 @@ def verificar_imagens_nas_alterntativas () {
 
 ### ? FUNÇÕES EXTRAIR ? ###
 
-def extrair_titulo_do_card(card_atual):
-    seletor = f"{card_atual} div.css-1v3caum div[style='padding: 0px 24px;']"
-    texto = card_atual.locator(seletor).text_content()
+def extrair_titulo_do_card(page, card_selector):
+    seletor = f"{card_selector} div.css-1v3caum div[style=\"padding: 0px 24px;\"]"
+    texto = page.locator(seletor).text_content()
     return texto.strip()  # Retorna o texto do título da questão
 
 
-def extrair_questao_radios(card_atual):
+def extrair_questao_radios(page, card_selector):
     # Chama a função reutilizável para extrair o título
-    head_questao = extrair_titulo_do_card(card_atual)
+    head_questao = extrair_titulo_do_card(page, card_selector)
 
     # Array para armazenar as alternativas
     alternativas_quetao = []
 
     # Itera sobre cada alternativa de radio dentro do card
-    alternativas = card_atual.locator("div.css-t1yck")
+    alternativas = page.locator(f"{card_selector} div.css-t1yck")
     numero_alternativas = alternativas.count()
 
     for indice_iteracao in range(1, numero_alternativas + 1):
@@ -648,15 +658,15 @@ def extrair_questao_radios(card_atual):
     '''
 
 
-def extrair_questao_checkbox(card_atual):
+def extrair_questao_checkbox(page, card_selector):
     # Chama a função reutilizável para extrair o título
-    head_questao = extrair_titulo_do_card(card_atual)
+    head_questao = extrair_titulo_do_card(page, card_selector)
 
     # Array para armazenar as alternativas
     alternativas_quetao = []
 
     # Itera sobre cada alternativa de checkbox dentro do card
-    alternativas = card_atual.locator("div.css-t1yck")
+    alternativas = page.locator(f"{card_selector} div.css-t1yck")
     numero_alternativas = alternativas.count()
 
     for indice_iteracao in range(1, numero_alternativas + 1):
@@ -692,15 +702,15 @@ def extrair_questao_checkbox(card_atual):
     '''
 
 
-def extrair_questao_dragable(card_atual):
+def extrair_questao_dragable(page, card_selector):
     # Chama a função reutilizável para extrair o título
-    head_questao = extrair_titulo_do_card(card_atual)
+    head_questao = extrair_titulo_do_card(page, card_selector)
 
     # Array para armazenar as alternativas
     alternativas_quetao = []
 
     # Itera sobre cada alternativa dragable dentro do card
-    alternativas = card_atual.locator("div.css-z0sbrd")
+    alternativas = page.locator(f"{card_selector} div.css-z0sbrd")
     numero_alternativas = alternativas.count()
 
     for indice_iteracao in range(1, numero_alternativas + 1):
@@ -748,15 +758,15 @@ def extrair_questao_dragable(card_atual):
     '''
 
 
-def extrair_questao_order(card_atual):
+def extrair_questao_order(page, card_selector):
     # Chama a função reutilizável para extrair o título
-    head_questao = extrair_titulo_do_card(card_atual)
+    head_questao = extrair_titulo_do_card(page, card_selector)
 
     # Array para armazenar as alternativas
     alternativas_quetao = []
 
     # Itera sobre cada alternativa "Order" dentro do card
-    alternativas = card_atual.locator("div.MuiChip-root.css-16x8ql9")
+    alternativas = page.locator(f"{card_selector} div.css-16x8ql9")
     numero_alternativas = alternativas.count()
 
     for indice_iteracao in range(1, numero_alternativas + 1):
@@ -795,9 +805,9 @@ def extrair_questao_order(card_atual):
     '''
 
 
-def extrair_questao_textarea(card_atual):
+def extrair_questao_textarea(page, card_selector):
     # Chama a função reutilizável para extrair o título
-    head_questao = extrair_titulo_do_card(card_atual)
+    head_questao = extrair_titulo_do_card(page, card_selector)
 
     # Retorna o título da questão
     return {
@@ -814,7 +824,7 @@ def extrair_questao_textarea(card_atual):
     '''
 
 
-#!funcao extrair_questao_select(card_atual) {}
+#!funcao extrair_questao_select(page, card_selector) {}
 
 
 def automacao_resposta(tipo_da_questao_chatgpt, tipo_questao_atual, numero_de_respostas, indice_iteracao):
