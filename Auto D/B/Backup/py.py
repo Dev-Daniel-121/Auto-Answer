@@ -50,34 +50,34 @@ def run():
                 
                 ??? ========================================= ***** ========================================= ???
 
-                tipo_questao_1 = 'Radios'
-                tipo_questao_2 = 'Checkbox'
-                tipo_questao_3 = 'Dragable'
-                tipo_questao_4 = 'Order'
-                tipo_questao_5 = 'Textarea'
-                tipo_questao_6 = 'Select'
+                *tipo_questao_1 = 'Radios'
+                *tipo_questao_2 = 'Checkbox'
+                *tipo_questao_3 = 'Dragable'
+                *tipo_questao_4 = 'Order'
+                *tipo_questao_5 = 'Textarea'
+                *tipo_questao_6 = 'Select'
                 
-                card_atual = 1 # Identificar o card atual e facilitar a especificação dos elementos dentro dela
-                texto_atual = 1 # Identificar o texto atual e facilitar a especificação dos elementos dentro dela
-                questao_atual = 1 # Identificar a questão atual e facilitar a especificação dos elementos dentro dela
+                *card_atual = 1 # Identificar o card atual e facilitar a especificação dos elementos dentro dela
+                *texto_atual = 1 # Identificar o texto atual e facilitar a especificação dos elementos dentro dela
+                *questao_atual = 1 # Identificar a questão atual e facilitar a especificação dos elementos dentro dela
 
-                card_verificado = 0 # Será para ajudar na verificação final
-                questoes_respondido = 0 # Número de questões respondidas
+                *card_verificado = 0 # Será para ajudar na verificação final
+                *questoes_respondido = 0 # Número de questões respondidas
 
                 # Essas variaveis vão servir para ajudar a contar e a entender quais questões aparecem mais
-                questao_texto_img_gif_video = 0
-                img_gif_video = 0
-                questao_texto = 0
-                questao_radios = 0
-                questao_checkbox = 0
-                questao_dragable = 0
-                questao_order = 0
-                questao_textarea = 0
+                *questao_texto_img_gif_video = 0
+                *img_gif_video = 0
+                *questao_texto = 0
+                *questao_radios = 0
+                *questao_checkbox = 0
+                *questao_dragable = 0
+                *questao_order = 0
+                *questao_textarea = 0
                 #! questao_select = 0
                 
-                ## DESCOBRIR QUANTAS VERIFICAÇÕES TEM QUE FAZER
-                numero_de_card = número de div.css-xz389d # A div.css-xz389d são cada card
-                numero_de_questao = número de div.css-nlzma4 # A div.css-nlzma4 são cada card de questões
+                *## DESCOBRIR QUANTAS VERIFICAÇÕES TEM QUE FAZER
+                *numero_de_card = número de div.css-xz389d # A div.css-xz389d são cada card
+                *numero_de_questao = número de div.css-nlzma4 # A div.css-nlzma4 são cada card de questões
                 
                 # JSON
                 *atividade = {
@@ -269,7 +269,7 @@ def run():
 
                 ? ### FUNÇÕES EXTRAIR ###
                     
-                *funcao extrair_texto_do_card(card_atual) {
+                *funcao extrair_titulo_do_card(card_atual) {
                     # Supondo que 'card_atual' é um elemento Playwright com a estrutura esperada
                     head_questao = Todo o conteúdo da div com o atributo style="padding: 0px 24px;" que está dentro da div.css-1v3caum que está dentro do pai que é :nth-match('div.MuiCard-root.css-xz389d, card_atual') pegue todo e qualquer forma de Texto # Isso é para garantir que vamos pegar todo o conteúdo do título da questão
                     retorne o conteúdo do texto
@@ -494,7 +494,7 @@ def run():
                 } ENQUANTO (numero_de_card > card_verificado)
 
                 *Para cada div.MuiCard-root.css-xz389d div.css-1v3caum {
-                    *SE (tipo_da_questao_chatgpt == tipo_questao) {
+                    *SE (tipo_da_questao_chatgpt == tipo_questao_atual) {
                         # Valida se o tipo da questão que o ChatGPT fez é o mesmo da original
                         *SE (tipo_da_questao_chatgpt == tipo_questao_1) {
                             # Valida o tipo da questão
