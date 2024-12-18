@@ -1,5 +1,5 @@
+import FileJson
 from playwright.sync_api import sync_playwright
-import json
 
 
 def login_estudante(page, ra, dg, uf, ps):
@@ -130,119 +130,119 @@ def fazer_atividade(page, seletor_botao_realizar):
     numero_de_questao = len(page.query_selector_all('div.css-nlzma4'))
 
     while card_verificado < numero_de_card:
-            head_texto = ''
-            head_questao = ''
-            tipo_questao = ''
-            #! alternativas_quetao = []
-            card_selector = f":nth-match(div.MuiCard-root.css-xz389d, {card_atual})"
+        head_texto = ''
+        head_questao = ''
+        tipo_questao = ''
+        #! alternativas_quetao = []
+        card_selector = f":nth-match(div.MuiCard-root.css-xz389d, {card_atual})"
 
-            # Verifica se o card tem PDF, Vídeo ou GIF
-            if page.locator(f"{card_selector} div.css-1mi3tt8").count() > 0 or \
-               page.locator(f"{card_selector} div.ytp-cued-thumbnail-overlay").count() > 0 or \
-               page.locator(f"{card_selector} img[style*='max-width: 100%;']").count() > 0:
-                
-                if page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").count() > 0:
-                    # Tem texto explicativo sobre o assunto
-                    head_texto = page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").text_content().strip()
-                    tipo_questao = tipo_questao_1
-                    salvarJSON(tipo_questao, texto_atual, head_texto)
-                    questao_texto_img_gif_video += 1
-                    texto_atual += 1
-                else:
-                    # Tem apenas PDF/Vídeo/GIF
-                    img_gif_video += 1
-
-                # Avançar para o próximo card
-                card_atual += 1
-                card_verificado += 1
-                continue
-
-            # Se não for PDF/Vídeo/GIF, pode ser uma questão
+        # Verifica se o card tem PDF, Vídeo ou GIF
+        if page.locator(f"{card_selector} div.css-1mi3tt8").count() > 0 or \
+            page.locator(f"{card_selector} div.ytp-cued-thumbnail-overlay").count() > 0 or \
+            page.locator(f"{card_selector} img[style*='max-width: 100%;']").count() > 0:
+            
             if page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").count() > 0:
-                # Questão de texto
-                head_questao = page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").text_content().strip()
+                # Tem texto explicativo sobre o assunto
+                head_texto = page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").text_content().strip()
                 tipo_questao = tipo_questao_1
-                salvarJSON(tipo_questao, texto_atual, head_questao)
-                questao_texto += 1
+                salvarJSON(tipo_questao, texto_atual, head_texto)
+                questao_texto_img_gif_video += 1
                 texto_atual += 1
-                card_atual += 1
-                card_verificado += 1
-                continue
+            else:
+                # Tem apenas PDF/Vídeo/GIF
+                img_gif_video += 1
 
-            # Identificar tipo de questão e extrair informações
-            if page.locator(f"{card_selector} div.css-nlzma4").count() > 0:
-                # Se for uma questão de algum tipo específico
-                if page.locator(f"{card_selector} span.MuiRadios-root.css-1sgsc5r").count() > 0:
-                    # Questão tipo Radio
-                    questao_radios += 1
-                    questao_radios_data = extrair_questao_radios(page, card_selector)
-
-                    salvarJSON(tipo_questao_2, questao_atual, questao_radios_data['titulo'], questao_radios_data['alternativas'])
-
-                    questoes_respondido += 1
-                    questao_atual += 1
-                    card_atual += 1
-                    card_verificado += 1
-                    continue
-
-                elif page.locator(f"{card_selector} span.MuiCheckbox-root.css-14bgux8").count() > 0:
-                    # Questão tipo Checkbox
-                    questao_checkbox += 1
-                    questao_checkbox_data = extrair_questao_checkbox(page, card_selector)
-
-                    salvarJSON(tipo_questao_3, questao_atual, questao_checkbox_data['titulo'], questao_checkbox_data['alternativas'])
-
-                    questoes_respondido += 1
-                    questao_atual += 1
-                    card_atual += 1
-                    card_verificado += 1
-                    continue
-
-                elif page.locator(f"{card_selector} div.css-z0sbrd").count() > 0:
-                    # Questão tipo Dragable
-                    questao_dragable += 1
-                    questao_dragable_data = extrair_questao_dragable(page, card_selector)
-
-                    salvarJSON(tipo_questao_4, questao_atual, questao_dragable_data['titulo'], questao_dragable_data['alternativas'])
-
-                    questoes_respondido += 1
-                    questao_atual += 1
-                    card_atual += 1
-                    card_verificado += 1
-                    continue
-
-                elif page.locator(f"{card_selector} div.MuiChip-root.css-16x8ql9").count() > 0:
-                    # Questão tipo Order
-                    questao_order += 1
-                    questao_order_data = extrair_questao_order(page, card_selector)
-
-                    salvarJSON(tipo_questao_5, questao_atual, questao_order_data['titulo'], questao_order_data['alternativas'])
-
-                    questoes_respondido += 1
-                    questao_atual += 1
-                    card_atual += 1
-                    card_verificado += 1
-                    continue
-
-                elif page.locator(f"{card_selector} div.MuiTextField-root.css-feqhe6").count() > 0:
-                    # Questão tipo Textarea
-                    questao_textarea += 1
-                    questao_textarea_data = extrair_questao_textarea(page, card_selector)
-
-                    salvarJSON(tipo_questao_6, questao_atual, questao_textarea_data['titulo'])
-
-                    questoes_respondido += 1
-                    questao_atual += 1
-                    card_atual += 1
-                    card_verificado += 1
-                    continue
-
-            # Caso não reconheça o tipo de questão, pedimos para o usuário resolver
-            print(f"Card {card_atual} não identificado. Solicitando ao usuário para resolver a questão.")
+            # Avançar para o próximo card
             card_atual += 1
             card_verificado += 1
+            continue
 
-    print("Atividade realizada!")
+        # Se não for PDF/Vídeo/GIF, pode ser uma questão
+        if page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").count() > 0:
+            # Questão de texto
+            head_questao = page.locator(f"{card_selector} h6.MuiTypography-root.MuiTypography-subtitle2.css-qpwa0j").text_content().strip()
+            tipo_questao = tipo_questao_1
+            salvarJSON(tipo_questao, texto_atual, head_questao)
+            questao_texto += 1
+            texto_atual += 1
+            card_atual += 1
+            card_verificado += 1
+            continue
+
+        # Identificar tipo de questão e extrair informações
+        if page.locator(f"{card_selector} div.css-nlzma4").count() > 0:
+            # Se for uma questão de algum tipo específico
+            if page.locator(f"{card_selector} span.MuiRadios-root.css-1sgsc5r").count() > 0:
+                # Questão tipo Radio
+                questao_radios += 1
+                questao_radios_data = extrair_questao_radios(page, card_selector)
+
+                salvarJSON(tipo_questao_2, questao_atual, questao_radios_data['titulo'], questao_radios_data['alternativas'])
+
+                questoes_respondido += 1
+                questao_atual += 1
+                card_atual += 1
+                card_verificado += 1
+                continue
+
+            elif page.locator(f"{card_selector} span.MuiCheckbox-root.css-14bgux8").count() > 0:
+                # Questão tipo Checkbox
+                questao_checkbox += 1
+                questao_checkbox_data = extrair_questao_checkbox(page, card_selector)
+
+                salvarJSON(tipo_questao_3, questao_atual, questao_checkbox_data['titulo'], questao_checkbox_data['alternativas'])
+
+                questoes_respondido += 1
+                questao_atual += 1
+                card_atual += 1
+                card_verificado += 1
+                continue
+
+            elif page.locator(f"{card_selector} div.css-z0sbrd").count() > 0:
+                # Questão tipo Dragable
+                questao_dragable += 1
+                questao_dragable_data = extrair_questao_dragable(page, card_selector)
+
+                salvarJSON(tipo_questao_4, questao_atual, questao_dragable_data['titulo'], questao_dragable_data['alternativas'])
+
+                questoes_respondido += 1
+                questao_atual += 1
+                card_atual += 1
+                card_verificado += 1
+                continue
+
+            elif page.locator(f"{card_selector} div.MuiChip-root.css-16x8ql9").count() > 0:
+                # Questão tipo Order
+                questao_order += 1
+                questao_order_data = extrair_questao_order(page, card_selector)
+
+                salvarJSON(tipo_questao_5, questao_atual, questao_order_data['titulo'], questao_order_data['alternativas'])
+
+                questoes_respondido += 1
+                questao_atual += 1
+                card_atual += 1
+                card_verificado += 1
+                continue
+
+            elif page.locator(f"{card_selector} div.MuiTextField-root.css-feqhe6").count() > 0:
+                # Questão tipo Textarea
+                questao_textarea += 1
+                questao_textarea_data = extrair_questao_textarea(page, card_selector)
+
+                salvarJSON(tipo_questao_6, questao_atual, questao_textarea_data['titulo'])
+
+                questoes_respondido += 1
+                questao_atual += 1
+                card_atual += 1
+                card_verificado += 1
+                continue
+
+        # Caso não reconheça o tipo de questão, pedimos para o usuário resolver
+        print(f"Card {card_atual} não identificado. Solicitando ao usuário para resolver a questão.")
+        card_atual += 1
+        card_verificado += 1
+
+    print("Extraida informações da atividade com sucesso!")
 
 ### ? FUNÇÕES JSON ? ###
 
@@ -349,9 +349,12 @@ respostas = {
     'resposta': {}
 }
 
-caminho_arquivo = "JSON/teste.json"
+caminho_arquivo = "JSON"
+nome_arquivo = "Respostas"
 
 def salvarJSON(tipo='', head_texto='', head_questao='', alternativas_quetao='', questao_atual='', texto_atual=''):
+    json = FileJson.FileJson()
+
     # Dicionários para armazenar os dados de texto e questões
     texto = {}
     questoes = {}
@@ -359,35 +362,35 @@ def salvarJSON(tipo='', head_texto='', head_questao='', alternativas_quetao='', 
     # Se o tipo for 'Texto'
     if tipo == 'Texto':
         # Adiciona um novo texto no dicionário 'texto'
-        texto[f"texto_{texto_atual}"] = {
+        texto = {
+            "Numero":texto_atual,
             "Tipo": tipo,
             "Texto": f'{head_texto}'  # Usa o valor de 'head_texto'
         }
         # Salva em um arquivo JSON
-        with open(caminho_arquivo, 'w') as arquivo_json:
-            json.dump({"texto": texto}, arquivo_json, indent=4)
+        json.create(nome_arquivo, texto, caminho_arquivo)
     
     # Se o tipo for um dos tipos de questão (tipo_questao_1 até tipo_questao_5)
     elif tipo in ['tipo_questao_1', 'tipo_questao_2', 'tipo_questao_3', 'tipo_questao_4', 'tipo_questao_5']:
         # Adiciona uma nova questão no dicionário 'questoes'
-        questoes[f"questao_{questao_atual}"] = {
+        questoes = {
+            "Numero": questao_atual,
             "Tipo": tipo,
             "Header": f'{head_questao}',  # Usa o valor de 'head_questao'
             "Alternativas": f'{alternativas_quetao}'  # Usa o valor de 'alternativas_quetao'
         }
         # Salva em um arquivo JSON
-        with open(caminho_arquivo, 'w') as arquivo_json:
-            json.dump({"questoes": questoes}, arquivo_json, indent=4)
+        json.create(nome_arquivo, questoes, caminho_arquivo)
 
 
 def pegar_resposta_JSON(caminho_arquivo):
-    with open(caminho_arquivo, 'r') as arquivo_json:
-        respostas = json.load(arquivo_json)
+    json = FileJson.FileJson()
+    respostas = json.read(nome_arquivo, caminho_arquivo)
     return respostas
 
 ### ? FUNÇÕES RESPONDER ? ###
 
-def responder_radios(indice_iteracao, caminho_arquivo):
+def responder_radios(page, indice_iteracao, caminho_arquivo):
     # Pega as respostas do arquivo JSON
     respostas = pegar_resposta_JSON(caminho_arquivo)
     
@@ -593,7 +596,6 @@ def responder_textarea(indice_iteracao, caminho_arquivo):
     print(f"Resposta preenchida: {resposta}")
     '''
 
-
 '''#!
 ### ! FUNÇÃO VERIFICAR IMAGEM NAS ALTERNATIVAS ? ###
 
@@ -606,7 +608,7 @@ def verificar_imagens_nas_alterntativas () {
 
 '''
 
-### ? FUNÇÕES EXTRAIR ? ###
+### * FUNÇÕES EXTRAIR * ###
 
 def extrair_titulo_do_card(page, card_selector):
     seletor = f"{card_selector} div.css-1v3caum div[style=\"padding: 0px 24px;\"]"
@@ -827,34 +829,39 @@ def extrair_questao_textarea(page, card_selector):
 #!funcao extrair_questao_select(page, card_selector) {}
 
 
-def automacao_resposta(tipo_da_questao_chatgpt, tipo_questao_atual, numero_de_respostas, indice_iteracao):
-    if tipo_da_questao_chatgpt == tipo_questao_atual:
+def automacao_resposta(page, card_selector, tipo_resposta, tipo_questao, numero_de_respostas, indice_iteracao):
+    tipo_resposta = tipo_resposta
+    tipo_questao = tipo_questao
+
+
+    # for indice_iteracao in range 
+    if tipo_resposta == tipo_questao:
         # Valida se o tipo da questão que o ChatGPT fez é o mesmo da original
-        if tipo_da_questao_chatgpt == 'tipo_questao_1':  # Rádio
+        if tipo_resposta == 'tipo_questao_1':  # Rádio
             if numero_de_respostas == 1:
                 responder_radios(indice_iteracao)
             else:
                 input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
-        elif tipo_da_questao_chatgpt == 'tipo_questao_2':  # Checkbox
+        elif tipo_resposta == 'tipo_questao_2':  # Checkbox
             if numero_de_respostas >= 1:
                 responder_checkbox(indice_iteracao)
             else:
                 input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
-        elif tipo_da_questao_chatgpt == 'tipo_questao_3':  # Drag-and-Drop
+        elif tipo_resposta == 'tipo_questao_3':  # Drag-and-Drop
             if numero_de_respostas >= 1:
                 responder_dragable(indice_iteracao)
             else:
                 input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
-        elif tipo_da_questao_chatgpt == 'tipo_questao_4':  # Ordem
+        elif tipo_resposta == 'tipo_questao_4':  # Ordem
             if numero_de_respostas >= 1:
                 responder_order(indice_iteracao)
             else:
                 input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
-        elif tipo_da_questao_chatgpt == 'tipo_questao_5':  # Textarea
+        elif tipo_resposta == 'tipo_questao_5':  # Textarea
             if numero_de_respostas >= 1:
                 responder_textarea(indice_iteracao)
             else:
@@ -868,8 +875,8 @@ def automacao_resposta(tipo_da_questao_chatgpt, tipo_questao_atual, numero_de_re
 
     '''
     # Exemplificando como o código seria executado
-    tipo_da_questao_chatgpt = 'tipo_questao_1'
-    tipo_questao_atual = 'tipo_questao_1'
+    tipo_resposta = 'tipo_questao_1'
+    tipo_questao = 'tipo_questao_1'
     numero_de_respostas = 1
     indice_iteracao = 1
 
@@ -877,10 +884,10 @@ def automacao_resposta(tipo_da_questao_chatgpt, tipo_questao_atual, numero_de_re
     # como por exemplo pegar os tipos dos elementos com seletores CSS.
 
     # Exemplo de seleção do tipo da questão:
-    # tipo_da_questao_chatgpt = page.query_selector('div.MuiCard-root.css-xz389d div.css-1v3caum').inner_text()
+    # tipo_resposta = page.query_selector('div.MuiCard-root.css-xz389d div.css-1v3caum').inner_text()
 
     # Executar a automação de respostas
-    automacao_resposta(tipo_da_questao_chatgpt, tipo_questao_atual, numero_de_respostas, indice_iteracao)
+    automacao_resposta(tipo_resposta, tipo_questao, numero_de_respostas, indice_iteracao)
     '''
 
 
@@ -970,4 +977,3 @@ if __name__ == '__main__':
     uf = "SP"
     ps = "Bp110065#"
     run(ra, dg, uf, ps)
-    
