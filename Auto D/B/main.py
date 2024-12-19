@@ -830,48 +830,56 @@ def extrair_questao_textarea(page, card_selector):
 
 
 def automacao_resposta(page, card_selector, tipo_resposta, tipo_questao, numero_de_respostas, indice_iteracao):
-    tipo_resposta = tipo_resposta
-    tipo_questao = tipo_questao
+    cards_questao = page.locator(f"{card_selector} div.css-1v3caum")
+    numero_cards_questao = cards_questao.count()
 
+    for indice_iteracao in range(1, numero_cards_questao + 1):
+        card_questao = cards_questao.nth(indice_iteracao - 1)
 
-    # for indice_iteracao in range 
-    if tipo_resposta == tipo_questao:
-        # Valida se o tipo da questão que o ChatGPT fez é o mesmo da original
-        if tipo_resposta == 'tipo_questao_1':  # Rádio
-            if numero_de_respostas == 1:
-                responder_radios(indice_iteracao)
-            else:
-                input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+        tipo_resposta = tipo_resposta
+        tipo_questao = tipo_questao 
 
-        elif tipo_resposta == 'tipo_questao_2':  # Checkbox
-            if numero_de_respostas >= 1:
-                responder_checkbox(indice_iteracao)
-            else:
-                input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+        '''
+            Pegar tipo da questão do GPT e comparar com a questão
+        '''
 
-        elif tipo_resposta == 'tipo_questao_3':  # Drag-and-Drop
-            if numero_de_respostas >= 1:
-                responder_dragable(indice_iteracao)
-            else:
-                input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+        if tipo_resposta == tipo_questao:
+            # Valida se o tipo da questão que o ChatGPT fez é o mesmo da original
+            if tipo_resposta == 'tipo_questao_1':  # Rádio
+                if numero_de_respostas == 1:
+                    responder_radios(indice_iteracao)
+                else:
+                    input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
-        elif tipo_resposta == 'tipo_questao_4':  # Ordem
-            if numero_de_respostas >= 1:
-                responder_order(indice_iteracao)
-            else:
-                input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+            elif tipo_resposta == 'tipo_questao_2':  # Checkbox
+                if numero_de_respostas >= 1:
+                    responder_checkbox(indice_iteracao)
+                else:
+                    input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
-        elif tipo_resposta == 'tipo_questao_5':  # Textarea
-            if numero_de_respostas >= 1:
-                responder_textarea(indice_iteracao)
+            elif tipo_resposta == 'tipo_questao_3':  # Drag-and-Drop
+                if numero_de_respostas >= 1:
+                    responder_dragable(indice_iteracao)
+                else:
+                    input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+
+            elif tipo_resposta == 'tipo_questao_4':  # Ordem
+                if numero_de_respostas >= 1:
+                    responder_order(indice_iteracao)
+                else:
+                    input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+
+            elif tipo_resposta == 'tipo_questao_5':  # Textarea
+                if numero_de_respostas >= 1:
+                    responder_textarea(indice_iteracao)
+                else:
+                    input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
+
             else:
                 input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
         else:
             input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
-
-    else:
-        input(f"Verifique a questão {indice_iteracao} e pressione Enter para continuar...")
 
     '''
     # Exemplificando como o código seria executado
